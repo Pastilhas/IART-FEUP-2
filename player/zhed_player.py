@@ -38,19 +38,19 @@ class Game:
     def print_board(self):
         print('+---+---+---+---+---+---+---+---+')
         for i in self.board:
-          line = '| '
-          for j in i:
-            if j == '-2':
-              line += 'X'
-            elif j == '-1':
-              line += 'F'
-            elif j == '0':
-              line += ' '
-            else:
-              line += str(j)
-            line += ' | '
-          print(line)
-          print('+---+---+---+---+---+---+---+---+')
+            line = '| '
+            for j in i:
+                if j == '-2':
+                    line += 'X'
+                elif j == '-1':
+                    line += 'F'
+                elif j == '0':
+                    line += ' '
+                else:
+                    line += str(j)
+                line += ' | '
+            print(line)
+            print('+---+---+---+---+---+---+---+---+')
 
     def get_tile(self):
         while True:
@@ -119,6 +119,7 @@ class Game:
                 if int(j) > 0:
                     return False
         return True
+
 
 Game = Game()
 Game.play()
