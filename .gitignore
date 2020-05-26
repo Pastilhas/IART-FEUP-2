@@ -1,0 +1,4 @@
+*.txt
+*.csv
+results/
+__pycache__/

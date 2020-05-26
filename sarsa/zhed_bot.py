@@ -20,30 +20,25 @@ class Game:
     def update(self):
         reward = self.get_reward()
         move = self.get_ai_move()
+        state1 = self.curr_state.copy()
+        state2 = self.curr_state.copy()
 
         if self.last_action is not None and move is not None:
-            self.ai.update_table(tuple(self.last_state), self.last_action, reward, tuple(self.curr_state), move['action'])
-        elif move is None:
-            self.ai.update_table(tuple(self.last_state), self.last_action, reward, tuple(self.curr_state), None)
-
-        if move is not None:
-            self.last_action = move['action']
-            self.last_state = self.curr_state
-            last_action = self.actions[self.last_action]
-            self.file.write("    id(" + str(self.last_action) + ") => [" + str(last_action[0]) + "," + str(last_action[1]) + "] - " + str(last_action[2]) + "\n")
-        else:
-            last_action = [None,None,None]
+            state1.pop()
+            self.ai.update_table(tuple(state1), self.last_action, reward, tuple(state2), move['action'])
 
 
-        if self.win:
-            self.file.write("Win\n")
+        if self.win or self.fail():
+            state1.pop()
+            self.ai.update_table(tuple(state1), self.last_action, reward, tuple(state2), None)
+            self.last_action = None
+            self.last_state = None
+            self.file.write("Win\n" if self.win else "Lose\n")
             self.reset_game()
             return True
-        elif self.fail():
-            self.file.write("Lose\n")
-            self.reset_game()
-            return False
         else:
+            self.last_state = self.curr_state
+            self.last_action = move['action']
             self.make_move(move)
 
     def get_reward(self):
@@ -163,8 +158,10 @@ class Game:
                 if int(cell) > 0:
                     for k in range(4):
                         possible_actions.append(self.actions.index((j, i, k)))
+
         if not possible_actions:
             return None
+
         action_index = self.ai.take_action(tuple(self.curr_state), possible_actions)
 
         action = list(self.actions[action_index])
@@ -178,7 +175,7 @@ class Game:
 
 Game = Game()
 game_try = 0
-total_tries = 800000
+total_tries = 10000
 
 Game.ai.epsilon = 0.8                           # Exploring phase high epsilon
 Game.file.write("Game " + str(game_try) + "\n")

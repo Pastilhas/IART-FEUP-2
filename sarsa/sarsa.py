@@ -20,8 +20,7 @@ class Sarsa:
     # Update reward of (state, action) pair
     def update_table(self, state, action, reward, next_state, next_action):
         nextq = self.getValue(next_state, next_action)
-        self.q_table[(state, action)] = self.getValue(state, action) + self.alpha * \
-            (reward + self.gamma * nextq - self.getValue(state, action))
+        self.q_table[(state, action)] = self.getValue(state, action) + self.alpha * (reward + self.gamma * nextq - self.getValue(state, action))
 
     # Choose best action to take or explore new action
     def take_action(self, state, possible_actions):
